@@ -1,0 +1,12 @@
+hoge.db
+*.yml
+
+vendor/*
+.bundle
+.byebug_history
+Gemfile.lock
+
+*.swp
+pid
+nohup.out
+test*
