@@ -1,11 +1,8 @@
 
+
 # シェルコマンドを子プロセス(非同期)で扱う
 # validation，発話，Log記録を行う
 # 生成時にspeak, 死活管理は任せた
-
-DEV = (ENV['RACK_ENV']=='development')
-Indico.api_key = YAML.load_file('auth.yml')["indico"]
-
 class SpeakTask
   @@settings = YAML.load_file('settings.yml')['speaking']
   @@words = @@settings['words']
@@ -17,7 +14,7 @@ class SpeakTask
     @pid = nil
     
     adjust()
-    return false if text.empty? || text.length>100
+    return nil if text.empty? || text.length>100
 
     speak()
   end
