@@ -1,5 +1,5 @@
 require 'bundler'
-Bundler.require(:default, ENV['RACK_ENV'])
+Bundler.require(ENV['RACK_ENV'])
 
 # server.rbをrequire
 root = ::File.dirname(__FILE__)

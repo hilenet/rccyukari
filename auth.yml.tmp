@@ -1,0 +1,6 @@
+twitter:
+  ck: <Twitter Client Key>
+  cs: <Twitter Client Secret>
+  at: <Twitter Access Token>
+  as: <Twitter Access Secret>
+indico: <Indico API key>

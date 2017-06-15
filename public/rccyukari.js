@@ -3,6 +3,7 @@
     var logarea = document.getElementById("log-area");
     var form = document.getElementById("form");
     var send_text = document.getElementById("send_text");
+    var silent_button = document.getElementById("silent_button");
     var ws = new WebSocket("ws://" + window.location.host + "/ws");
 
     ws.onopen = function() {
@@ -16,14 +17,22 @@
       li.textContent = parseJson(m.data);
       logarea.insertBefore(li, logarea.firstChild);
     }
+
     send_text.onclick = function(){
       send_text.value = ""; 
     }
     text_form.onsubmit = function(){
-      if(send_text.value=="") return;
-      ws.send(send_text.value);
+      text = send_text.value
+      if(text=="") return;
+
+      msg = {"msg": text}
+      
+      ws.send(JSON.stringify(msg))
       send_text.value = "";
       return false;
+    }
+    silent_button.onclick = function(){
+      ws.send(JSON.stringify({"silent": true}));
     }
 
     function parseJson(data) {

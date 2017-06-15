@@ -1,4 +1,5 @@
-
+require 'faraday'
+require 'indico'
 
 # シェルコマンドを子プロセス(非同期)で扱う
 # validation，発話，Log記録を行う
@@ -6,6 +7,7 @@
 class SpeakTask
   @@settings = YAML.load_file('settings.yml')['speaking']
   @@words = @@settings['words']
+  Indico.api_key = YAML.load_file('auth.yml')["indico"]
 
   def initialize text, char='ykr', ip
     @text = text
@@ -19,11 +21,16 @@ class SpeakTask
     speak()
   end
 
+  #debug
+  def getPid()
+    @pid
+  end
+
   # check is alive, return bool
   def isAlive
     return false if @pid == nil
 
-    if waitpid(@pid, Process::WNOHANG)==@pid
+    if Process.waitpid(@pid, Process::WNOHANG)==@pid
       @pid = nil
       return false
     end
@@ -33,7 +40,7 @@ class SpeakTask
   
   # force kill
   def kill
-    kill @pid if @pid != nil
+    Process.kill 9, @pid if isAlive()
   end
 
 
