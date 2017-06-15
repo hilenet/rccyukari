@@ -45,8 +45,8 @@ class Server < Sinatra::Base
   private
 
   def openWebsock ws
-    Log.last(50).reverse do |node|
-      ws.send recordTohash(node).to_json
+    Log.last(50).each do |node|
+      ws.send recordToHash(node).to_json
     end
   end
 

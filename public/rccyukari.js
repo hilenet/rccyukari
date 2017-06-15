@@ -19,7 +19,8 @@
     send_text.onclick = function(){
       send_text.value = ""; 
     }
-    form.onsubmit = function(){
+    text_form.onsubmit = function(){
+      if(send_text.value=="") return;
       ws.send(send_text.value);
       send_text.value = "";
       return false;
@@ -27,7 +28,8 @@
 
     function parseJson(data) {
       json = JSON.parse(data)
-      return json['time']+": "+json['text'];
+      time = json['time'].replace(/\-/g, "/");
+      return time+": "+json['text'];
     }
   }
 })();

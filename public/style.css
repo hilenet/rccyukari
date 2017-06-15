@@ -1,0 +1,33 @@
+body {
+  font-family: "Rounded Mplus 1c";
+  margin-top: 0;
+  margin-left: 0;
+}
+
+header {
+  padding: 5px 5px 5px 15px;
+  background: #f7e8f4;
+  font-size: 25px;
+}
+
+div.note {
+  padding: 5px 10px;
+  margin: 10px 0px 0px 0px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-width: 400px;
+}
+
+div.logbox {
+  background: #eeeeee;
+  max-width: 800px;
+}
+div.note ul {
+  list-style: none;
+  margin: 10px 0px;
+  padding: 0px 5px;
+}
+
+section.contents {
+  padding: 10px;
+}
