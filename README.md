@@ -9,6 +9,14 @@ Sinatra サーバ
 Twitter daemon
 * tl拾ってきてサーバにパス
 
+## requirement
+* Ruby (>2.3.0)
+* SQlite3
+
+* youtube-dl(https://rg3.github.io/youtube-dl/index.html)
+* mplayer(http://www.mplayerhq.hu/)
+* yukarin(from hilenet)
+
 ## run
 0. Make "settings.yml" and "auth.yml". You can replicate and fill in with \*.tmp.
 1. `bundle install --path=vendor/path`
@@ -18,6 +26,10 @@ Twitter daemon
 ## purpose(dev
 * process usage
 speaking task will be thread
+youtube too
 
 * rackup module
+yet
+
 * rspec testing
+yet

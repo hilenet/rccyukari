@@ -43,9 +43,14 @@ class Server < Sinatra::Base
         puts "get message: #{json}"
 
         hash = JSON.parse json
-        silentize();next if(hash["silent"]!=nil)
-        getMessage(hash["msg"], request.ip);next if (hash["msg"]!=nil)
-        getYoutube(hash["youtube"], request.ip);next if (hash["youtube"]!=nil)
+
+        if hash['silent']!=nil
+          silentize()
+        elsif hash['msg']!=nil
+          getMessage hash["msg"], request.ip
+        elsif hash['url']!=nil
+          getYoutube hash["url"], request.ip
+        end
       end
       ws.onclose do
         settings.sockets.delete ws
@@ -59,12 +64,18 @@ class Server < Sinatra::Base
   def getYoutube url, ip
     killYoutube()
     
-    @@youtube = Process.spawn(command, {pgroup: true})
+    command = "youtube-dl '#{url}' -o - | mplayer - -novideo --volume=30 --softvol"
+
+    @@youtube = Process.spawn("echo \"#{command}\"") if DEV
+    @@youtube = Process.spawn(command, {pgroup: true}) if !DEV
 
   end
 
   def killYoutube
-    Process.kill 9, -1*@@youtube if @@youtube
+    return unless @@youtube
+
+    isAlive = !Process.waitpid(@@youtube, Process::WNOHANG) 
+    Process.kill 9, -1*@@youtube if isAlive
   end
 
   # kill all speak task
