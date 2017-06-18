@@ -10,6 +10,11 @@ header {
   font-size: 25px;
 }
 
+section.contents {
+  padding: 10px;
+  padding-top: 20px;
+}
+
 div.note {
   padding: 5px 10px;
   margin: 10px 0px 0px 0px;
@@ -28,7 +33,17 @@ div.note ul {
   padding: 0px 5px;
 }
 
-section.contents {
-  padding: 10px;
-  padding-top: 20px;
+#char_button {
+  text-decoration: none;
+  border: none;
+  color: white;
+}
+#char_button[value="ykr"] {
+  background-color: purple;
+}
+#char_button[value="ai"] {
+  background-color: pink;
+}
+#char_button[value="akn"] {
+  background-color: red;
 }

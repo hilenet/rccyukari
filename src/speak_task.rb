@@ -5,8 +5,9 @@ require 'indico'
 # validation，発話，Log記録を行う
 # 生成時にspeak, 死活管理は任せた
 class SpeakTask
-  @@settings = YAML.load_file('settings.yml')['speaking']
-  @@words = @@settings['words']
+  settings = YAML.load_file('settings.yml')['speaking']
+  @@words = settings['words']
+  @@char_list = settings['chars']
   Indico.api_key = YAML.load_file('auth.yml')["indico"]
 
   def initialize text, char='ykr', ip
@@ -71,6 +72,8 @@ class SpeakTask
   def adjust 
     result = escaping @text
     result = kidding result
+
+    @char = "ykr" unless @@char_list.include? @char
 
     @text = result
   end

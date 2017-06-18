@@ -1,2 +1,3 @@
 speaking:
   words: <NG word array>
+  chars: <allow using char array>

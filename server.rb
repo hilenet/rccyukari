@@ -47,7 +47,7 @@ class Server < Sinatra::Base
         if hash['silent']!=nil
           silentize()
         elsif hash['msg']!=nil
-          getMessage hash["msg"], request.ip
+          getMessage hash["msg"], hash["char"], request.ip
         elsif hash['url']!=nil
           getYoutube hash["url"], request.ip
         end
@@ -102,8 +102,8 @@ class Server < Sinatra::Base
   end
 
   # proc of message getting
-  def getMessage text, ip
-    speaktask = SpeakTask.new text, ip, @@tasks 
+  def getMessage text, char, ip
+    speaktask = SpeakTask.new text, char, ip
     return unless speaktask!=nil
 
     settings.sockets.each do |s|
