@@ -41,6 +41,8 @@ class Server < Sinatra::Base
       end
       ws.onmessage do |json|
         puts "get message: #{json}"
+        
+        return nil if filter request.ip
 
         hash = JSON.parse json
 
@@ -58,7 +60,40 @@ class Server < Sinatra::Base
     end
   end
 
+  get '/banned' do 
+    res = "banned:<br>"
+    BannedIp.all.map do |node|
+      line = "#{node.ip}: ~#{(node.created_at.localtime+3600).to_s[0..-7]}"
+      res += line+"<br>"
+    end
+
+    return res
+  end
+
   private
+
+  # return false if data invalid
+  def filter ip
+    # Thread切りたいけどトランザクション怪しいなあ・・・
+    update_banned_table(ip)
+    return true if BannedIp.all.map{|node| node.ip}.include? ip
+
+    return false
+  end
+
+  # expire = 3600s
+  # ban : 10req / 10s
+  def update_banned_table ip
+    # reflesh
+    unless (l=BannedIp.where("created_at < ?", Time.now-3600)).empty?
+      BannedIp.destroy l.map{|node| node.id}
+    end
+    # ban
+    if Log.where("created_at > ?", Time.now-10).length >= 10
+      BannedIp.create(ip: ip) unless BannedIp.find_by(ip: ip)
+      puts "ban: #{ip}"
+    end
+  end
 
   # play youtube
   def getYoutube url, ip
