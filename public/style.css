@@ -37,6 +37,8 @@ div.note ul {
   text-decoration: none;
   border: none;
   color: white;
+  border-radius: 5px;
+  min-width: 35px;
 }
 #char_button[value="ykr"] {
   background-color: purple;

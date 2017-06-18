@@ -8,6 +8,7 @@ gem 'faraday'
 gem 'sinatra', require: 'sinatra/base'
 gem 'sinatra-websocket'
 
+gem 'twitter'
 gem 'indico'
 
 gem 'sqlite3'

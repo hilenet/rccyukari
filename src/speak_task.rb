@@ -1,3 +1,4 @@
+require 'yaml'
 require 'faraday'
 require 'indico'
 
@@ -60,8 +61,8 @@ class SpeakTask
       command = "yukarin2 -v #{vol} #{char} -q -a #{asj[:a]} -s #{asj[:s]} -j #{asj[:j]} #{@text}"
     end
     
-    @pid = Process.spawn "echo \"+#{command}\"" if DEV
-    @pid = Process.spawn command if !DEV
+    @pid = Process.spawn "echo \"+#{command}\"" if $DEV
+    @pid = Process.spawn command if !$DEV
 
     Log.create(ip: @ip, text: @text)
 
@@ -80,7 +81,7 @@ class SpeakTask
 
   # 感情値解析
   def analyze 
-    return {a: '1.0', s: '1.0', j: '1.0'} if DEV
+    return {a: '1.0', s: '1.0', j: '1.0'} if $DEV
 
     t_text = translate @text
     value = emotion t_text

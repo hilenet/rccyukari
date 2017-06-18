@@ -3,21 +3,13 @@ require 'json'
 require 'sinatra/base'
 require 'sinatra-websocket'
 
-require_relative 'src/init.rb'
-require_relative 'src/adopt_db.rb'
-require_relative 'src/speak_task.rb'
-
-=begin
-Thread.start do
-
-end
-=end
-
+require_relative 'src/adapt_db'
+require_relative 'src/speak_integrate'
+require_relative 'src/adapt_twitter'
 
 class Server < Sinatra::Base
   set :server, 'thin'
   set :sockets, []
-  @@tasks = []
   @@youtube = nil
 
   configure :development do
@@ -30,7 +22,7 @@ class Server < Sinatra::Base
   end
 
   get '/ws' do
-    checkTask()
+    $sIntegrate.checkTask()
     redirect to '/' unless request.websocket?
 
     request.websocket do |ws|
@@ -70,6 +62,19 @@ class Server < Sinatra::Base
     return res
   end
 
+  # proc of message getting
+  def getMessage text, char, ip
+    speaktask = $sIntegrate.publishTask text, char, ip
+    
+    if speaktask!=nil
+      settings.sockets.each do |s|
+        s.send(recordToHash(Log.last).to_json)
+      end
+    end
+
+    return speaktask
+  end
+
   private
 
   # return false if data invalid
@@ -101,8 +106,8 @@ class Server < Sinatra::Base
     
     command = "youtube-dl '#{url}' -o - | mplayer - -novideo --volume=30 --softvol"
 
-    @@youtube = Process.spawn("echo \"#{command}\"") if DEV
-    @@youtube = Process.spawn(command, {pgroup: true}) if !DEV
+    @@youtube = Process.spawn("echo \"#{command}\"") if $DEV
+    @@youtube = Process.spawn(command, {pgroup: true}) if !$DEV
 
   end
 
@@ -115,18 +120,8 @@ class Server < Sinatra::Base
 
   # kill all speak task
   def silentize
-    @@tasks.each do |task|
-      task.kill
-    end
-    @@tasks.clear
+    $sIntegrate.clearTasks
     killYoutube()
-  end
-
-  # check all speak task
-  def checkTask
-    @@tasks.each do |task|
-      @@tasks.delete task unless task.isAlive
-    end
   end
 
   # send initialize log when ws.open
@@ -134,24 +129,6 @@ class Server < Sinatra::Base
     Log.last(50).each do |node|
       ws.send recordToHash(node).to_json
     end
-  end
-
-  # proc of message getting
-  def getMessage text, char, ip
-    speaktask = SpeakTask.new text, char, ip
-    return unless speaktask!=nil
-
-    settings.sockets.each do |s|
-      s.send(recordToHash(Log.last).to_json)
-    end
-
-    @@tasks << speaktask if @@tasks
-    removeTask @@tasks.shift if @@tasks.length>5
-  end
-
-  # remove arg task
-  def removeTask task
-    task.kill
   end
 
   # convert log obj to rb hash
