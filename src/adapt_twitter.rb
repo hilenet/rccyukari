@@ -4,7 +4,7 @@ require 'twitter'
 Thread.abort_on_exception = true
 
 tw = Thread.new do 
-  auth = YAML.load_file('auth.yml')["twitter"]
+  auth = YAML.load_file('config/auth.yml')["twitter"]
   cl = Twitter::Streaming::Client.new do |config|
     config.consumer_key = auth["ck"]
     config.consumer_secret = auth["cs"]

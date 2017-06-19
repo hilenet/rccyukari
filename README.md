@@ -18,9 +18,9 @@ Twitter daemon
 * yukarin(from hilenet)
 
 ## run
-0. Make "settings.yml" and "auth.yml". You can replicate and fill in with \*.tmp.
+0. Make "config/settings.yml" and "config/auth.yml". You can replicate and fill in with \*.tmp.
 1. `bundle install --path=vendor/path`
-2. `bundle exec ruby setup.rb`
+2. `bundle exec rake db:migrate`
 3. `bundle exec rackup [-E production]`
 
 ## purpose(dev

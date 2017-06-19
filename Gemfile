@@ -14,6 +14,8 @@ gem 'indico'
 gem 'sqlite3'
 gem 'activerecord', require: 'active_record'
 
+gem 'rake'
+
 group :development do
   gem 'sinatra-contrib', require: 'sinatra/reloader'
   gem 'byebug'

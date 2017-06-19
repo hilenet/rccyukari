@@ -1,10 +1,9 @@
+require 'yaml'
 require 'sqlite3'
 require 'active_record'
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: 'hoge.db'
-)
+config = YAML.load_file 'config/database.yml'
+ActiveRecord::Base.establish_connection config['db']
 
 # all log
 # ip, text, times

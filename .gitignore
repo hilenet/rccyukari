@@ -9,4 +9,6 @@ Gemfile.lock
 *.swp
 pid
 nohup.out
-test*
+todo
+
+!.gitkeep

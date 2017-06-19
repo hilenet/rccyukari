@@ -6,10 +6,10 @@ require 'indico'
 # validation，発話，Log記録を行う
 # 生成時にspeak, 死活管理は任せた
 class SpeakTask
-  settings = YAML.load_file('settings.yml')['speaking']
+  settings = YAML.load_file('config/settings.yml')['speaking']
   @@words = settings['words']
   @@char_list = settings['chars']
-  Indico.api_key = YAML.load_file('auth.yml')["indico"]
+  Indico.api_key = YAML.load_file('config/auth.yml')["indico"]
 
   # Do all process
   # Return nil/obj
