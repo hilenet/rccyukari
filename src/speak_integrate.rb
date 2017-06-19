@@ -1,6 +1,6 @@
 require_relative 'speak_task.rb'
 
-# IntegrateSpeakTask I/O
+# Integrate SpeakTask I/O
 # No validation
 class SpeakIntegrate
   @@tasks = []

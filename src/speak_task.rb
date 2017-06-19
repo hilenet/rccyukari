@@ -11,6 +11,8 @@ class SpeakTask
   @@char_list = settings['chars']
   Indico.api_key = YAML.load_file('auth.yml')["indico"]
 
+  # Do all process
+  # Return nil/obj
   def initialize text, char='ykr', ip
     @text = text
     @char = char
@@ -23,12 +25,8 @@ class SpeakTask
     speak()
   end
 
-  #debug
-  def getPid()
-    @pid
-  end
-
-  # check is alive, return bool
+  # Wait proc (non-blocking
+  # Return bool, that process is alive
   def isAlive
     return false if @pid == nil
 
@@ -40,7 +38,7 @@ class SpeakTask
     return true
   end
   
-  # force kill
+  # Force kill
   def kill
     Process.kill 9, @pid if isAlive()
   end
@@ -48,8 +46,8 @@ class SpeakTask
 
   private
 
-  # 普段はここどうぞ
   # analyze, speak, log動作
+  # Return proc pid
   def speak
     asj = analyze()
 
@@ -70,6 +68,8 @@ class SpeakTask
   end
 
   # 喋るのに適した形へ
+  # Escape, and kidding text
+  # Validate char
   def adjust 
     result = escaping @text
     result = kidding result

@@ -1,4 +1,3 @@
-require 'yaml'
 require 'json'
 require 'sinatra/base'
 require 'sinatra-websocket'
