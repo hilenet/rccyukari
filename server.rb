@@ -4,7 +4,6 @@ require 'sinatra-websocket'
 
 require_relative 'src/adapt_db'
 require_relative 'src/speak_integrate'
-require_relative 'src/adapt_twitter'
 
 class Server < Sinatra::Base
   set :server, 'thin'
@@ -21,7 +20,6 @@ class Server < Sinatra::Base
   end
 
   get '/ws' do
-    $sIntegrate.checkTask()
     redirect to '/' unless request.websocket?
 
     request.websocket do |ws|
@@ -31,6 +29,7 @@ class Server < Sinatra::Base
         openWebsock(ws)
       end
       ws.onmessage do |json|
+        $sIntegrate.checkTask()
         puts "get message: #{json}"
         
         return nil if filter request.ip
@@ -102,8 +101,10 @@ class Server < Sinatra::Base
   # play youtube
   def getYoutube url, ip
     killYoutube()
+
+    return false unless url.match /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
     
-    command = "youtube-dl '#{url}' -o - | mplayer - -novideo --volume=30 --softvol"
+    command = "youtube-dl '#{url}' -o - | mplayer - -novideo --volume=40"
 
     @@youtube = Process.spawn("echo \"#{command}\"") if $DEV
     @@youtube = Process.spawn(command, {pgroup: true}) if !$DEV
@@ -115,6 +116,8 @@ class Server < Sinatra::Base
 
     isAlive = !Process.waitpid(@@youtube, Process::WNOHANG) 
     Process.kill 9, -1*@@youtube if isAlive
+
+    @@youtube = nil
   end
 
   # kill all speak task

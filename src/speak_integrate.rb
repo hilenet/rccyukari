@@ -36,4 +36,9 @@ class SpeakIntegrate
       @@tasks.delete task unless task.isAlive
     end
   end
+
+  def removeTask sTask
+    sTask.kill
+  end
+
 end
