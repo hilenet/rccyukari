@@ -124,7 +124,7 @@ class SpeakTask
     text.gsub!(' ', '、')
     text.gsub!('\n', '。')
 
-    text.tr!(',.|<>:;/\\"\'`&%#', '，．｜＜＞：；／＼”’`＆％＃')
+    text.tr!(',.|<>:;/\\"\'`&%#()', '，．｜＜＞：；／＼”’`＆％＃（）')
 
     return text
   end
