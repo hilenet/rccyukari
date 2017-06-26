@@ -1,0 +1,4 @@
+db:
+  adapter:  sqlite3
+  host:     localhost
+  database: db/hoge.db
