@@ -8,9 +8,10 @@
 <body>
   <header>部室のゆかりさん</header>
 
-  <section class="contents">
+  <div class="contents">
 
-  <section class="form">
+  <div class="boxContainer">
+  <div class="form box">
     <!-- message form  -->
     <form id="text_form">
       message: <input type="text" id="send_text">
@@ -23,10 +24,15 @@
       url: <input type="text" id="send_url">
       <input type="submit" value="play">
     </form>
+  </div>
 
-    <!-- silent button -->
-    <input id="silent_button" type="button" value="お静かに">
-  </section>
+  <div class="song box">
+    now playing: <div id="youtube_title"></div>
+  </div>
+  </div>
+
+  <!-- silent button -->
+  <input id="silent_button" type="button" value="お静かに">
 
 
   <!-- 書き直し  -->
@@ -52,6 +58,6 @@
       <!-- log area  --> 
     </ul>
   </div>
-  </section>
+  </div>
 </body>
 </html>

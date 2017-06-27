@@ -16,9 +16,13 @@
       console.log("connection closed");
     }
     ws.onmessage = function(m) {
-      var li = document.createElement("li");
-      li.textContent = parseJson(m.data);
-      logarea.insertBefore(li, logarea.firstChild);
+      var json = JSON.parse(m.data)
+      
+      if(json["log"]) {
+        getLog(json["log"]);
+      } else if (json["youtube"]) {
+        getYoutube(json["youtube"]);
+      } 
     }
 
     send_text.onclick = function(){
@@ -69,11 +73,20 @@
     silent_button.onclick = function(){
       ws.send(JSON.stringify({"silent": true}));
     }
-
-    function parseJson(data) {
-      json = JSON.parse(data)
+    
+    function getLog(data) {
+      var li = document.createElement("li");
+      li.textContent = parseJson(data);
+      logarea.insertBefore(li, logarea.firstChild);
+    }
+    function parseJson(json) {
       time = json['time'].replace(/\-/g, "/");
       return time+": "+json['text'];
+    }
+
+    function getYoutube(title) {
+      field = document.getElementById("youtube_title")
+      field.innerHTML = title;
     }
   }
 })();

@@ -10,9 +10,18 @@ header {
   font-size: 25px;
 }
 
-section.contents {
+div.contents {
   padding: 10px;
   padding-top: 20px;
+}
+
+div.box {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 20px;
+}
+div.song {
+  max-width: 40%
 }
 
 div.note {

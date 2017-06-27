@@ -9,7 +9,8 @@ class Server < Sinatra::Base
   set :server, 'thin'
   set :sockets, []
   @@youtube = nil
-
+  @@youtube_title = "-"
+  
   configure :development do
     require 'sinatra/reloader'
     register Sinatra::Reloader
@@ -65,15 +66,20 @@ class Server < Sinatra::Base
     speaktask = $sIntegrate.publishTask text, char, ip
     
     if speaktask!=nil
-      settings.sockets.each do |s|
-        s.send(recordToHash(Log.last).to_json)
-      end
+      multiCast({"log": recordToHash(Log.last)}.to_json)
     end
 
     return speaktask
   end
 
   private
+
+  # hash
+  def multiCast msg
+    settings.sockets.each do |s|
+      s.send(msg)
+    end
+  end
 
   # return false if data invalid
   def filter ip
@@ -109,15 +115,34 @@ class Server < Sinatra::Base
     @@youtube = Process.spawn("echo \"#{command}\"") if $DEV
     @@youtube = Process.spawn(command, {pgroup: true}) if !$DEV
 
+    @@youtube_title = titleOf(url)
+    multiCast({"youtube": @@youtube_title}.to_json)
   end
 
-  def killYoutube
+  def titleOf url
+    conn = Faraday.new(url: url) do |builder|
+      builder.request  :url_encoded
+      builder.response :logger
+      builder.adapter  :net_http
+    end
+    
+    res = conn.get()
+    
+    q = res.body.match /<meta property="og:title" content="(.*)">/
+    text = q[1]
+
+    return text.force_encoding('UTF-8')
+  end
+
+  def killYoutube 
     return unless @@youtube
 
     isAlive = !Process.waitpid(@@youtube, Process::WNOHANG) 
     Process.kill 9, -1*@@youtube if isAlive
 
     @@youtube = nil
+    @@youtube_title = "-"
+    multiCast({"youtube": @@youtube_title}.to_json)
   end
 
   # kill all speak task
@@ -129,8 +154,9 @@ class Server < Sinatra::Base
   # send initialize log when ws.open
   def openWebsock ws
     Log.last(50).each do |node|
-      ws.send recordToHash(node).to_json
+      ws.send({"log": recordToHash(node)}.to_json)
     end
+    ws.send({"youtube": @@youtube_title}.to_json)
   end
 
   # convert log obj to rb hash
