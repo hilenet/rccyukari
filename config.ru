@@ -17,7 +17,7 @@ $sIntegrate = SpeakIntegrate.new
 
 # twitter_adapter
 # not require if dev, to decrease api call
-require ::File.join(root, 'src/adapt_twitter') if $DEV
+require ::File.join(root, 'src/adapt_twitter') if !$DEV
 
 # server.rbをrequire
 require ::File.join(root, 'server')
