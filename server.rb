@@ -139,6 +139,7 @@ class Server < Sinatra::Base
 
     isAlive = !Process.waitpid(@@youtube, Process::WNOHANG) 
     Process.kill 9, -1*@@youtube if isAlive
+    Process.waitpid(@@youtube, Process::WNOHANG) if isAlive
 
     @@youtube = nil
     @@youtube_title = "-"
