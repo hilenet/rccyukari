@@ -20,6 +20,9 @@ div.box {
   vertical-align: middle;
   margin-right: 20px;
 }
+div.form {
+  min-width: 300px;
+}
 div.song {
   max-width: 40%
 }
